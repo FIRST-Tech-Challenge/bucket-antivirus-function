@@ -17,7 +17,6 @@ import copy
 import json
 import os
 from urllib.parse import unquote_plus
-from distutils.util import strtobool
 
 import boto3
 
@@ -269,6 +268,23 @@ def lambda_handler(event, context):
     stop_scan_time = get_timestamp()
     print("Script finished at %s\n" % stop_scan_time)
 
+_MAP = {
+    'y': True,
+    'yes': True,
+    't': True,
+    'true': True,
+    'on': True,
+    '1': True,
+    'n': False,
+    'no': False,
+    'f': False,
+    'false': False,
+    'off': False,
+    '0': False
+}
 
-def str_to_bool(s):
-    return bool(strtobool(str(s)))
+def str_to_bool(value):
+    try:
+        return _MAP[str(value).lower()]
+    except KeyError:
+        raise ValueError('"{}" is not a valid bool value'.format(value))

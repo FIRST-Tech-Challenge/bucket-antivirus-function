@@ -15,4 +15,4 @@ jobs:
     # Todo theoretically run pre-commit here too
     - run: pip install -r requirements.txt
     - run: pip install -r requirements-dev.txt
-    - run: nosetests
+    - run: nose2

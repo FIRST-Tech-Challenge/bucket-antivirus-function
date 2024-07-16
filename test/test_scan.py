@@ -64,7 +64,7 @@ class TestScan(unittest.TestCase):
         sns_event = {"Records": [{"Sns": {"Message": json.dumps(event)}}]}
         s3_obj = event_object(sns_event, event_source="sns")
         expected_s3_object = self.s3.Object(self.s3_bucket_name, self.s3_key_name)
-        self.assertEquals(s3_obj, expected_s3_object)
+        self.assertEqual(s3_obj, expected_s3_object)
 
     def test_s3_event_object(self):
         event = {
@@ -79,7 +79,7 @@ class TestScan(unittest.TestCase):
         }
         s3_obj = event_object(event)
         expected_s3_object = self.s3.Object(self.s3_bucket_name, self.s3_key_name)
-        self.assertEquals(s3_obj, expected_s3_object)
+        self.assertEqual(s3_obj, expected_s3_object)
 
     def test_s3_event_object_missing_bucket(self):
         event = {"Records": [{"s3": {"object": {"key": self.s3_key_name}}}]}
@@ -267,7 +267,7 @@ class TestScan(unittest.TestCase):
         s3_obj = self.s3.Object(self.s3_bucket_name, self.s3_key_name)
         file_path = get_local_path(s3_obj, local_prefix)
         expected_file_path = "/tmp/test_bucket/test_key"
-        self.assertEquals(file_path, expected_file_path)
+        self.assertEqual(file_path, expected_file_path)
 
     def test_set_av_metadata(self):
         scan_result = "CLEAN"
