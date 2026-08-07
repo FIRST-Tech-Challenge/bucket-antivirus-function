@@ -13,8 +13,7 @@ COPY requirements.txt /opt/app/requirements.txt
 # Install packages
 RUN dnf update -y
 RUN dnf install -y cpio 'dnf-command(download)' zip unzip less
-# Don't love this but python 3.12 is not in AL2023 yet
-RUN dnf install -y https://repo.almalinux.org/almalinux/9/AppStream/x86_64/os/Packages/python3.12-3.12.1-4.el9.x86_64.rpm https://repo.almalinux.org/almalinux/9/AppStream/x86_64/os/Packages/python3.12-libs-3.12.1-4.el9.x86_64.rpm        https://repo.almalinux.org/almalinux/9/AppStream/x86_64/os/Packages/python3.12-pip-wheel-23.2.1-4.el9.noarch.rpm https://repo.almalinux.org/almalinux/9/AppStream/x86_64/os/Packages/libnsl2-2.0.0-1.el9.x86_64.rpm https://repo.almalinux.org/almalinux/9/AppStream/x86_64/os/Packages/python3.12-pip-23.2.1-4.el9.noarch.rpm
+RUN dnf install -y python3.12 python3.12-pip
 
 # This had --no-cache-dir, tracing through multiple tickets led to a problem in wheel
 RUN pip3.12 install -r requirements.txt
@@ -22,10 +21,10 @@ RUN rm -rf /root/.cache/pip
 
 # Download libraries we need to run in lambda
 WORKDIR /tmp
-RUN dnf download clamav clamav-lib clamav-update json-c pcre2 libtool-ltdl
-RUN rpm2cpio clamav-0*.rpm | cpio -idmv
-RUN rpm2cpio clamav-lib*.rpm | cpio -idmv
-RUN rpm2cpio clamav-update*.rpm | cpio -idmv
+RUN dnf download clamav1.4 clamav1.4-lib clamav1.4-freshclam json-c pcre2 libtool-ltdl
+RUN rpm2cpio clamav1.4-1.*.rpm | cpio -idmv
+RUN rpm2cpio clamav1.4-lib*.rpm | cpio -idmv
+RUN rpm2cpio clamav1.4-freshclam*.rpm | cpio -idmv
 RUN rpm2cpio json-c*.rpm | cpio -idmv
 RUN rpm2cpio pcre*.rpm | cpio -idmv
 RUN rpm2cpio libtool-ltdl*.rpm | cpio -idmv
